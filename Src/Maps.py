@@ -12,7 +12,7 @@ def LoadMap(file_name: str = None, folder: str = None) -> list[list[str]]:
         file_name = "map.txt"
 
     if folder is not None:
-        file_name = folder + "/" + file_name
+        file_name = "../" + folder + "/" + file_name
 
     board = []
     with open(file_name, "r") as file:
