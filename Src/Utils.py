@@ -5,20 +5,21 @@ def get_assigned_unassigned(board: list[list[str]]):
         board (list[list[str]]): the map
 
     Returns:
-        assign (dict[tuple[int, int], str]): assigned cells, location - value, the value isn't convert to int yet
+        assign (set[tuple[int, int]]): locations of assigned cells
         unassign (set[tuple[int, int]]): locations of unassigned cells
     """
-    assign: dict[tuple[int, int], str] = {}
+    assign: set[tuple[int, int]] = set()
     unassign: set[tuple[int, int]] = set()
 
     for i in range(len(board)):
         for j in range(len(board[0])):
             if board[i][j] != "_":
-                assign[(i, j)] = board[i][j]
+                assign.add((i, j))
             else:
                 unassign.add((i, j))
-    
+
     return assign, unassign
+
 
 def flatten(pos: tuple[int, int], n: int) -> int:
     """
@@ -30,14 +31,19 @@ def flatten(pos: tuple[int, int], n: int) -> int:
     Returns:
         int: 1D index
     """
-    return (pos[0]) * n + pos[1] +1
+    return (pos[0]) * n + pos[1] + 1
+
+
 def unflatten(pos: int, n: int) -> tuple[int, int]:
     """
     Convert 1D index back to 2D index
     """
     return (pos - 1) // n, (pos - 1) % n
 
-def get_neighbors(pos: tuple[int, int], unassign: set[tuple[int, int]]) -> list[tuple[int, int]]:
+
+def get_neighbors(
+    pos: tuple[int, int], unassign: set[tuple[int, int]]
+) -> list[tuple[int, int]]:
     """
     Find all the neighbors of a cell that is unassigned
     Args:
@@ -54,5 +60,5 @@ def get_neighbors(pos: tuple[int, int], unassign: set[tuple[int, int]]) -> list[
     for dx, dy in move:
         if (x + dx, y + dy) in unassign:
             neighbors.append((x + dx, y + dy))
-    
+
     return neighbors
