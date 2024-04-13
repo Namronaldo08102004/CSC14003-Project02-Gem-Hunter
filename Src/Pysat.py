@@ -15,3 +15,4 @@ def pysat_solver(clauses: list) -> list[int]:
         if solver.solve():
             model = solver.get_model()
     return model
+

@@ -1,6 +1,7 @@
 import os
 
-from Src.Algorithm import *
+from Src.Pysat import *
+from Src.GA import *
 from Src.Gen_CNF import gen_CNF
 from Src.Maps import Board
 
@@ -19,7 +20,7 @@ def choose_map(folder: str = "Maps"):
 # Choose the algorithm to solve the CNF
 def choose_algorithm():
     # algo = ["Pysat", "A*", "Brute Force", "Back-tracking"]
-    algo = ["Pysat"]
+    algo = ["Pysat", "Genetic Algorithm"]
     print("Available algorithms to solve CNF")
     for i, a in enumerate(algo, 1):
         print(f"{i}: {a}")
@@ -28,13 +29,13 @@ def choose_algorithm():
     return inp
 
 # Re-branching algorithm
-def re_branch(inp: int, clauses: list) -> list[int]:
+def re_branch(inp: int, clauses: list, boardSize: tuple[int, int]) -> list[int]:
     model = None
     match inp:
         case 0:
             model = pysat_solver(clauses)
         case 1:
-            pass
+            model = GeneticAlgorithm(boardSize[0] * boardSize[1], clauses)
         case 2:
             pass
         case 3:
@@ -49,7 +50,7 @@ if __name__ == "__main__":
     board.display("Input map")
 
     clauses = gen_CNF(board)
-    model = re_branch(inp=choose_algorithm(), clauses=clauses)
+    model = re_branch(inp = choose_algorithm(), clauses = clauses, boardSize = (board.rows, board.cols))
 
     if model is not None:
         board.load_solution(model)
