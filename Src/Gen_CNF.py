@@ -12,7 +12,11 @@ def gen_CNF(board: Board):
         val = int(board.board[pos[0]][pos[1]])
         neighbors = board.get_neighbors(pos)
 
-        if len(neighbors) == 0:
+        if val == 0:
+            # No trap around
+            for neighbor in neighbors:
+                clauses.append([-flatten(neighbor, board.cols)])
+        elif len(neighbors) == 0:
             continue
         elif len(neighbors) == val:
             for neighbor in neighbors:
