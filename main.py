@@ -1,14 +1,18 @@
 import os
+from time import time_ns
 
 from Src.Pysat import *
 from Src.GA import *
 from Src.Gen_CNF import gen_CNF
 from Src.Maps import Board
 
+
 # Find all maps in the chosen folder to choose from
 def choose_map(folder: str = "Maps"):
     map_list = os.listdir(folder)
-    map_list = [x for x in map_list if x.endswith(".txt")]
+    map_list = [
+        x for x in map_list if x.endswith(".txt") and not x.endswith("_solution.txt")
+    ]
 
     print("Available maps")
     for i, m in enumerate(map_list):
@@ -16,6 +20,7 @@ def choose_map(folder: str = "Maps"):
     inp = int(input("Choose a map: ")) - 1
     print()
     return map_list[inp], folder
+
 
 # Choose the algorithm to solve the CNF
 def choose_algorithm():
@@ -28,9 +33,11 @@ def choose_algorithm():
     print()
     return inp
 
+
 # Re-branching algorithm
-def re_branch(inp: int, clauses: list, boardSize: tuple[int, int]) -> list[int]:
+def re_branch(inp: int, clauses: list, boardSize: tuple[int, int]) -> tuple[list[int], int]:
     model = None
+    start_time = time_ns()
     match inp:
         case 0:
             model = pysat_solver(clauses)
@@ -42,7 +49,7 @@ def re_branch(inp: int, clauses: list, boardSize: tuple[int, int]) -> list[int]:
             pass
         case _:
             pass
-    return model
+    return model, (time_ns() - start_time)
 
 
 if __name__ == "__main__":
@@ -50,11 +57,12 @@ if __name__ == "__main__":
     board.display("Input map")
 
     clauses = gen_CNF(board)
-    model = re_branch(inp = choose_algorithm(), clauses = clauses, boardSize = (board.rows, board.cols))
+    model, run_time = re_branch(inp = choose_algorithm(), clauses = clauses, boardSize = (board.rows, board.cols))
 
     if model is not None:
         board.load_solution(model)
         board.display("Solution")
         board.export_solution()
+        print(f"Run time: {run_time} nano-seconds")
     else:
         print("No solution found")
