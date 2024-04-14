@@ -71,7 +71,7 @@ def choose_unknown_literal (unknownLiterals: list[int], clauses: list[list[int]]
             if (-literal in countNegation):
                 countNegation[-literal] += 1
                 
-    maxNegation = 0
+    maxNegation = -1
     chosenLiteral = None
     
     for literal in unknownLiterals:
