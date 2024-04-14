@@ -2,9 +2,6 @@ import os
 from time import time_ns
 
 from Src.DPLL import dpll_solver
-from Src.GA import GeneticAlgorithm
-from Src.A_Star import *
-from Src.Resolution import *
 from Src.Gen_CNF import gen_CNF
 from Src.Maps import Board
 from Src.Pysat import pysat_solver
@@ -33,7 +30,7 @@ def choose_map(folder: str = "Maps"):
 # Choose the algorithm to solve the CNF
 def choose_algorithm():
     # algo = ["Pysat", "A*", "Brute Force", "Back-tracking"]
-    algo = ["Pysat", "CSP", "DPLL"]
+    algo = ["Pysat", "DPLL"]
     print("Available algorithms to solve CNF")
     for i, a in enumerate(algo, 1):
         print(f"{i}: {a}")
@@ -43,16 +40,16 @@ def choose_algorithm():
 
 
 # Re-branching algorithm
-def re_branch(inp: int, clauses: list, board: Board) -> tuple[list[int], int]:
+def re_branch(inp: int, clauses: list) -> tuple[list[int], int]:
     model = None
     start_time = time_ns()
     match inp:
         case 0:
             model = pysat_solver(clauses)
         case 1:
-            model = CSP_Backtracking_Solver(board, clauses)
-        case 2:
             model = dpll_solver(clauses)
+        case 2:
+            pass
         case 3:
             pass
         case _:
@@ -66,7 +63,7 @@ def main():
     board.display("Input map")
 
     clauses = gen_CNF(board)
-    model, run_time = re_branch(inp = choose_algorithm(), clauses = clauses, board = board)
+    model, run_time = re_branch(inp = choose_algorithm(), clauses = clauses)
 
     if model is not None:
         board.load_solution(model)
