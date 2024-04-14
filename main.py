@@ -1,10 +1,11 @@
 import os
 from time import time_ns
 
-from Src.Pysat import *
-from Src.GA import *
+from Src.DPLL import dpll_solver
+from Src.GA import GeneticAlgorithm
 from Src.Gen_CNF import gen_CNF
 from Src.Maps import Board
+from Src.Pysat import pysat_solver
 
 
 # Find all maps in the chosen folder to choose from
@@ -14,19 +15,24 @@ def choose_map(folder: str = "Maps"):
         x for x in map_list if x.endswith(".txt") and not x.endswith("_solution.txt")
     ]
 
-    print("Available maps")
+    print("    Available maps")
     for i, m in enumerate(map_list):
         print(f"{i+1}: {m}")
+    print(f"{len(map_list) + 1}: Quit")
+
     inp = int(input("Choose a map: ")) - 1
     print()
+    if inp == len(map_list):
+        print("Quitting...")
+        exit()
     return map_list[inp], folder
 
 
 # Choose the algorithm to solve the CNF
 def choose_algorithm():
     # algo = ["Pysat", "A*", "Brute Force", "Back-tracking"]
-    algo = ["Pysat", "Genetic Algorithm"]
-    print("Available algorithms to solve CNF")
+    algo = ["Pysat", "Genetic Algorithm", "DPLL"]
+    print("    Available algorithms to solve CNF")
     for i, a in enumerate(algo, 1):
         print(f"{i}: {a}")
     inp = int(input("Choose an algorithm: ")) - 1
@@ -35,7 +41,9 @@ def choose_algorithm():
 
 
 # Re-branching algorithm
-def re_branch(inp: int, clauses: list, boardSize: tuple[int, int]) -> tuple[list[int], int]:
+def re_branch(
+    inp: int, clauses: list, boardSize: tuple[int, int]
+) -> tuple[list[int], int]:
     model = None
     start_time = time_ns()
     match inp:
@@ -44,7 +52,7 @@ def re_branch(inp: int, clauses: list, boardSize: tuple[int, int]) -> tuple[list
         case 1:
             model = GeneticAlgorithm(boardSize[0] * boardSize[1], clauses)
         case 2:
-            pass
+            model = dpll_solver(clauses)
         case 3:
             pass
         case _:
@@ -52,17 +60,31 @@ def re_branch(inp: int, clauses: list, boardSize: tuple[int, int]) -> tuple[list
     return model, (time_ns() - start_time)
 
 
-if __name__ == "__main__":
+def main():
     board = Board(*choose_map())
+    # board = Board("map4.txt", "Maps")
     board.display("Input map")
 
     clauses = gen_CNF(board)
-    model, run_time = re_branch(inp = choose_algorithm(), clauses = clauses, boardSize = (board.rows, board.cols))
+    model, run_time = re_branch(
+        inp=choose_algorithm(), clauses=clauses, boardSize=(board.rows, board.cols)
+    )
+    # model, run_time = re_branch(0, clauses=clauses, boardSize=(board.rows, board.cols))
 
     if model is not None:
         board.load_solution(model)
         board.display("Solution")
         board.export_solution()
-        print(f"Run time: {run_time} nano-seconds")
+        print(f"Run time: {run_time:_} nano-seconds\n")
     else:
-        print("No solution found")
+        print("No solution found\n")
+
+
+if __name__ == "__main__":
+    try:
+        while True:
+            main()
+    except KeyboardInterrupt:
+        print("\nProgram terminated by user")
+    except Exception as e:
+        print(f"An error occurred: {e}")
