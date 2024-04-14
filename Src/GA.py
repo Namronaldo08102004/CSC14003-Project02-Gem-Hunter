@@ -1,4 +1,4 @@
-from random import shuffle, choices, randint, random
+from random import choices, randint, random
 
 class Node:
     def __init__ (self, state: list[int], clauses: list[list[int]]):
