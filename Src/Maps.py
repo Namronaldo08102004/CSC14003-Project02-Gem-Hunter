@@ -1,3 +1,6 @@
+import os
+
+
 def flatten(pos: tuple[int, int], n: int) -> int:
     """
     Convert to 1D index count from 1 (cannot use 0 in pysat-CNF)
@@ -39,9 +42,10 @@ class Board:
         """
         if file_name is None:
             file_name = "map.txt"
+        self.file_name = file_name
+        self.folder = folder
         if folder is not None:
             file_name = folder + "/" + file_name
-        self.file_name = file_name
 
         with open(file_name, "r") as file:
             for line in file:
@@ -95,13 +99,18 @@ class Board:
             for j in range(self.cols):
                 if self.board[i][j] == "_":
                     self.board[i][j] = "G"
+
     def export_solution(self, file_name: str = None):
+        if not os.path.exists(self.folder + "/Solutions"):
+            os.makedirs(self.folder + "/Solutions")
         if not file_name:
-            file_name = self.file_name[:-4] + "_solution.txt"
+            file_name = (
+                self.folder + "/Solutions/" + self.file_name[:-4] + "_solution.txt"
+            )
         with open(file_name, "w") as file:
             for row in self.board:
                 file.write(", ".join(row) + "\n")
-        
+
     def display(self, msg: str = None):
         """
         Print the maps
