@@ -1,0 +1,4 @@
+3, T, G, G
+T, T, G, G
+G, G, G, G
+G, G, G, G
