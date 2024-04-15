@@ -1,5 +1,5 @@
 T, 2, G, 2, T
 T, 5, 3, 4, T
 T, T, T, T, 4
-T, G, T, T, T
-1, G, 3, T, G
+G, G, G, T, T
+1, T, 3, T, G
