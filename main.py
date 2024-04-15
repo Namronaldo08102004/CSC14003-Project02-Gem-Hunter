@@ -2,7 +2,7 @@ import os
 from time import time_ns
 
 from Src.DPLL import dpll_solver
-from Src.Redundant_source.Resolution import CSP_Backtracking_Solver
+from Src.Redundant_source.CSP_Backtracking import CSP_Backtracking_Solver
 from Src.Gen_CNF import gen_CNF
 from Src.Maps import Board
 from Src.Pysat import pysat_solver
