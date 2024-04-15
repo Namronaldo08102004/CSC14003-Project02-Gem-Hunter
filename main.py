@@ -1,7 +1,7 @@
 import os
 from time import time_ns
 
-from Src.BruteForce_BackTrack import brute_force
+from Src.BruteForce_BackTrack import brute_force, backtracking_solver
 from Src.DPLL import dpll_solver
 from Src.Gen_CNF import gen_CNF
 from Src.Maps import Board
@@ -38,6 +38,7 @@ def re_branch(clauses: list[list[int]], board: Board) -> tuple[list[int], int]:
         "DPLL": dpll_solver,
         "CSP_Backtracking": CSP_Backtracking_Solver,
         "Brute Force": brute_force,
+        "Backtracking": backtracking_solver
     }
     inp = gather_input(key := list(algo.keys()), "Choose an algorithm: ")
     model = None
