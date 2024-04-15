@@ -1,9 +1,10 @@
 from random import choice
 
+
 # Refs: https://github.com/marcmelis/dpll-sat/blob/master/solvers/original_dpll.py
 class DPLL:
-    def __init__(self, cnf):
-        self.cnf = cnf
+    def __init__(self, clauses: list[list[int]]):
+        self.cnf = clauses
 
     def get_model(self):
         solution = self.dpll(self.cnf)
@@ -11,14 +12,14 @@ class DPLL:
             return None
         return sorted(list(solution), key=abs)
 
-    def get_counter(self, cnf):
+    def get_counter(self, cnf: list[list[int]]):
         counter = set()
         for clause in cnf:
             for literal in clause:
                 counter.add(literal)
         return counter
 
-    def constraint_propagation(self, cnf, unit):
+    def constraint_propagation(self, cnf: list[list[int]], unit: int):
         modified = []
         for clause in cnf:
             # If the clause is already satisfied, ignore it
@@ -37,7 +38,7 @@ class DPLL:
 
         return modified
 
-    def eliminate_pure_literal(self, cnf):
+    def eliminate_pure_literal(self, cnf: list[list[int]]):
         pures = set()
         modified = cnf
         counter = self.get_counter(cnf)
@@ -53,7 +54,7 @@ class DPLL:
 
         return modified, pures
 
-    def unit_propagation(self, cnf):
+    def unit_propagation(self, cnf: list[list[int]]):
         modified = cnf
         unit_clauses = [clause for clause in cnf if len(clause) == 1]
         assignments = set()
@@ -75,7 +76,7 @@ class DPLL:
 
         return modified, assignments
 
-    def dpll(self, cnf, assigned: set = set()):
+    def dpll(self, cnf: list[list[int]], assigned: set = set()):
         modified, pures = self.eliminate_pure_literal(cnf)
         modified, assignments = self.unit_propagation(modified)
         assigned = assigned | pures | assignments
@@ -102,6 +103,6 @@ class DPLL:
         return solution
 
 
-def dpll_solver(cnf):
-    dpll = DPLL(cnf)
+def dpll_solver(clauses: list[list[int]], *args, **kwargs):
+    dpll = DPLL(clauses)
     return dpll.get_model()
