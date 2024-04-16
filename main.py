@@ -7,7 +7,7 @@ from Src.Gen_CNF import gen_CNF
 from Src.Maps import Board
 from Src.Pysat import pysat_solver
 from Src.Redundant_source.CSP_Backtracking import CSP_Backtracking_Solver
-
+from Src.Redundant_source.GA import GeneticAlgorithm
 
 def gather_input(src: list[str], msg: str):
     print(msg)
@@ -38,7 +38,8 @@ def re_branch(clauses: list[list[int]], board: Board) -> tuple[list[int], int]:
         "DPLL": dpll_solver,
         "CSP_Backtracking": CSP_Backtracking_Solver,
         "Brute Force": brute_force,
-        "Backtracking": backtracking_solver
+        "Backtracking": backtracking_solver,
+        "Genetic Algorithm": GeneticAlgorithm
     }
     inp = gather_input(key := list(algo.keys()), "Choose an algorithm: ")
     model = None

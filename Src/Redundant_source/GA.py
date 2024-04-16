@@ -1,7 +1,8 @@
 from random import choices, randint, random
+from Src.Maps import *
 
 class Node:
-    def __init__ (self, state: list[int], clauses: list[list[int]]):
+    def __init__ (self, state: list[int], clauses: list[list[int]], listAssigned: list[int]):
         """
         The state of each node will be a list of integers where:
             + The positive integer denotes there is a trap at the corresponding position
@@ -11,6 +12,7 @@ class Node:
         """
         self.state = state
         self.clauses = clauses
+        self.listAssigned = listAssigned
         
     def heuristicFunction (self) -> int:
         """
@@ -35,11 +37,12 @@ class Node:
             Q.E.D
         """
         numConflictClauses: int = 0
+        model = self.state + self.listAssigned
         
         for clause in self.clauses:
             conflict: bool = True
             
-            for literal in self.state:
+            for literal in model:
                 if (literal in clause):
                     conflict = False
                     break
@@ -60,21 +63,28 @@ Genetic algorithm references:
 + https://www.youtube.com/watch?v=uQj5UNhCPuo
 + https://www.youtube.com/watch?v=nhT56blfRpE
 """
-def GeneticAlgorithm (stateLength: int, clauses: list[list[int]]) -> list[int]:
-    """
-    The length of each state will be board.rows * board.cols
-    """
-    def generatePopulation (state_length: int, population_size: int) -> list[Node]:
-        def generateRandomState (state_length: int) ->list[int]:
+def GeneticAlgorithm (clauses: list[list[int]], board: Board) -> list[int]:
+    assigned_flatten_cell = list(set([clause[0] for clause in clauses if len(clause) == 1]))
+    listUnassigned = list(set([i for i in range (1, board.rows * board.cols + 1)]) 
+                          - set(map(lambda x: abs(x), assigned_flatten_cell)))
+    visited: dict[tuple[int], bool] = dict()
+    
+    def generatePopulation (population_size: int) -> list[Node]:
+        def generateRandomState () -> list[int]:
             newState: list[int] = []
             
-            for i in range (1, state_length + 1):
-                option = [-i, i]
+            for literal in listUnassigned:
+                option = [-literal, literal]
                 newState.append(choices(option)[0])
                 
             return newState
         
-        newPopulation: list[Node] = [Node(generateRandomState(state_length), clauses) for _ in range (0, population_size)]
+        newPopulation: list[Node] = []
+        for _ in range (0, population_size):
+            if (visited.get(tuple(state := generateRandomState())) is None):
+                visited[tuple(state)] = True
+                newPopulation.append(Node(state, clauses, assigned_flatten_cell))
+            
         return newPopulation
     
     def fitness (node: Node):
@@ -97,8 +107,8 @@ def GeneticAlgorithm (stateLength: int, clauses: list[list[int]]) -> list[int]:
             return (nodePair[0], nodePair[1])
         
         cross_position = randint(0, length - 1)
-        crossover_1 = Node(nodePair[0].state[:cross_position] + nodePair[1].state[cross_position:], clauses)
-        crossover_2 = Node(nodePair[1].state[:cross_position] + nodePair[0].state[cross_position:], clauses)
+        crossover_1 = Node(nodePair[0].state[:cross_position] + nodePair[1].state[cross_position:], clauses, assigned_flatten_cell)
+        crossover_2 = Node(nodePair[1].state[:cross_position] + nodePair[0].state[cross_position:], clauses, assigned_flatten_cell)
         return (crossover_1, crossover_2)
     
     def mutation (node: Node, numMutablePositions: int = 1, probability: float = 0.2) -> Node:
@@ -115,15 +125,10 @@ def GeneticAlgorithm (stateLength: int, clauses: list[list[int]]) -> list[int]:
                 return node
         return None
     
-    #? Generate the initial state
-    initialState = []
-    for i in range (1, stateLength + 1):
-        initialState.append(-i)
+    population_size = board.rows * 3
     
     #? Generate population with a specific size
-    state_length = stateLength
-    population_size = stateLength
-    population = generatePopulation(state_length, population_size)
+    population = generatePopulation(population_size)
     
     #? Until solution was found, continue to generate new population
     solution = findGoal(population)
@@ -135,7 +140,7 @@ def GeneticAlgorithm (stateLength: int, clauses: list[list[int]]) -> list[int]:
             parents = selectionPair(population)
             offspring_1, offspring_2 = crossover((parents[0], parents[1]))
             
-            #? Take mutation with a specific probability (0.03 in default)
+            #? Take mutation with a specific probability (0.2 in default)
             offspring_1 = mutation(offspring_1)
             offspring_2 = mutation(offspring_2)
             
@@ -146,4 +151,4 @@ def GeneticAlgorithm (stateLength: int, clauses: list[list[int]]) -> list[int]:
         population = next_population
         solution = findGoal(population)
         
-    return solution.state
+    return solution.state + assigned_flatten_cell
