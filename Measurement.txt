@@ -1,0 +1,10 @@
+example.txt
+	Backtracking: 0.0 ns
+
+map10.txt
+
+map15.txt
+
+map4.txt
+	Backtracking: 1,004,100.0 ns
+
