@@ -1,10 +1,38 @@
 example.txt
-	Backtracking: 0.0 ns
+	PySAT: 0.0 ns
+	DPLL: 407,900.0 ns
+	CSP_Backtracking: 199,960.0 ns
+	Brute Force: 204,800.0 ns
+	GA: 195,380.0 ns
 
 map10.txt
+	PySAT: 461,500.0 ns
+	DPLL: 9,375,000.0 ns
+	CSP_Backtracking: 12,835,580.0 ns
 
 map15.txt
+	PySAT: 400,000.0 ns
+	DPLL: 13,905,960.0 ns
+	CSP_Backtracking: 5,195,280.0 ns
 
 map4.txt
-	Backtracking: 1,004,100.0 ns
+	PySAT: 0.0 ns
+	DPLL: 199,440.0 ns
+	CSP_Backtracking: 0.0 ns
+	Brute Force: 0.0 ns
+	GA: 0.0 ns
+
+map5.txt
+	PySAT: 0.0 ns
+	DPLL: 197,800.0 ns
+	CSP_Backtracking: 270,800.0 ns
+	Brute Force: 116,191,780.0 ns
+	GA: 612,893,040.0 ns
+
+map6.txt
+	PySAT: 201,200.0 ns
+	DPLL: 600,020.0 ns
+	CSP_Backtracking: 199,060.0 ns
+	Brute Force: 406,040.0 ns
+	GA: 89,136,780.0 ns
 

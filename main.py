@@ -7,8 +7,9 @@ from Src.Gen_CNF import gen_CNF
 from Src.Maps import Board
 from Src.Pysat import pysat_solver
 from Src.Redundant_source.CSP_Backtracking import CSP_Backtracking_Solver
-from Src.Redundant_source.GA import GeneticAlgorithm
+from Src.GA import GeneticAlgorithm
 
+# Gather user input
 def gather_input(src: list[str], msg: str):
     print(msg)
     for i, s in enumerate(src, 1):
@@ -31,7 +32,7 @@ def choose_map(folder: str = "Maps"):
         exit()
     return map_list[inp], folder
 
-
+# Run the chosen algorithm
 def re_branch(clauses: list[list[int]], board: Board) -> tuple[list[int], int]:
     algo: dict[str, callable] = {
         "PySAT": pysat_solver,
@@ -55,6 +56,7 @@ def main():
     board.display("Input map")
 
     clauses = gen_CNF(board)
+    print(f"Number of clauses: {len(clauses)}")
     model, run_time = re_branch(clauses=clauses, board=board)
 
     if model is not None:

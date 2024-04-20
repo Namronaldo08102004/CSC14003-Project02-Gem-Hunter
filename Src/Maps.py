@@ -113,7 +113,7 @@ class Board:
 
     def display(self, msg: str = None):
         """
-        Print the maps
+        Print the maps using extended ASCII characters
         """
         if msg is not None:
             print(msg)
