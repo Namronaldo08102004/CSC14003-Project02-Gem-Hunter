@@ -6,7 +6,7 @@ from Src.DPLL import dpll_solver
 from Src.Gen_CNF import gen_CNF
 from Src.Maps import Board
 from Src.Pysat import pysat_solver
-from Src.Redundant_source.CSP_Backtracking import CSP_Backtracking_Solver
+from Src.CSP_Backtracking import CSP_Backtracking_Solver
 from Src.GA import GeneticAlgorithm
 
 # Gather user input
