@@ -1,0 +1,17 @@
+Chạy chương trình
+
+Show danh sách các map
+
+Bắt đầu Chạy
+
+Test thử map10, map15 vs PySAT
+
+Show 2 file kết quả
+
+Chạy thử map10 vs DPLL
+Chạy map6 vs GA
+Chạy map7 vs BruteForce
+Chạy map8 vs CSP_Backtracking
+
+
+### Nhớ mở to terminal

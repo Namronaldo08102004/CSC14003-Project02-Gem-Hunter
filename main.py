@@ -1,13 +1,14 @@
 import os
 from time import time_ns
 
-from Src.BruteForce_BackTrack import brute_force, backtracking_solver
+from Src.BruteForce_BackTrack import backtracking_solver, brute_force
+from Src.CSP_Backtracking import CSP_Backtracking_Solver
 from Src.DPLL import dpll_solver
+from Src.GA import GeneticAlgorithm
 from Src.Gen_CNF import gen_CNF
 from Src.Maps import Board
 from Src.Pysat import pysat_solver
-from Src.CSP_Backtracking import CSP_Backtracking_Solver
-from Src.GA import GeneticAlgorithm
+
 
 # Gather user input
 def gather_input(src: list[str], msg: str):
@@ -32,15 +33,16 @@ def choose_map(folder: str = "Maps"):
         exit()
     return map_list[inp], folder
 
+
 # Run the chosen algorithm
 def re_branch(clauses: list[list[int]], board: Board) -> tuple[list[int], int]:
     algo: dict[str, callable] = {
         "PySAT": pysat_solver,
         "DPLL": dpll_solver,
-        "CSP_Backtracking": CSP_Backtracking_Solver,
+        "Backtracking": CSP_Backtracking_Solver,
         "Brute Force": brute_force,
-        "Backtracking": backtracking_solver,
-        "Genetic Algorithm": GeneticAlgorithm
+        # "Backtracking": backtracking_solver,
+        "Genetic Algorithm": GeneticAlgorithm,
     }
     inp = gather_input(key := list(algo.keys()), "Choose an algorithm: ")
     model = None
@@ -56,7 +58,6 @@ def main():
     board.display("Input map")
 
     clauses = gen_CNF(board)
-    print(f"Number of clauses: {len(clauses)}")
     model, run_time = re_branch(clauses=clauses, board=board)
 
     if model is not None:
