@@ -58,6 +58,7 @@ def main():
     board.display("Input map")
 
     clauses = gen_CNF(board)
+    # [print(c) for c in sorted(clauses, key=lambda x: (len(x), abs(x[0])))]
     model, run_time = re_branch(clauses=clauses, board=board)
 
     if model is not None:
