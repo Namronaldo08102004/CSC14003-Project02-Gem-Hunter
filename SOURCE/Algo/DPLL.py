@@ -19,10 +19,13 @@ class DPLL:
         """
         Count all of the different literals in the current CNF formula
         """
-        counter = set()
+        counter = dict()
         for clause in cnf:
             for literal in clause:
-                counter.add(literal)
+                if literal in counter:
+                    counter[literal] += 1
+                else:
+                    counter[literal] = 1
         return counter
 
     def constraint_propagation(self, cnf: list[list[int]], unit: int) -> list[list[int]] | int:
@@ -131,9 +134,13 @@ class DPLL:
 
         if len(modified) == 0:
             return assigned
+        
+        counter = self.get_counter(modified)
+        # Choose the literal that appears the most in the CNF formula
+        literal = max(counter, key=counter.get)
 
-        # Choose a literal to randomly assign True
-        literal = choice(choice(modified))
+        # Choose a literal to randomly assign
+        # literal = choice(choice(modified)) 
 
         # Recursively call DPLL with the chosen literal
         tmp_cnf = self.constraint_propagation(modified, literal)
