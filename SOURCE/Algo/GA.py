@@ -1,5 +1,5 @@
 from random import choices, randint, random
-from Src.Maps import *
+from Preparation.Maps import *
 
 class Node:
     def __init__ (self, state: list[int], clauses: list[list[int]], listAssigned: list[int]):

@@ -1,5 +1,4 @@
-from Src.Maps import *
-
+from Preparation.Maps import *
 
 def check_model(clauses: list[list[int]], model: list[int]) -> bool:
     """
@@ -10,7 +9,6 @@ def check_model(clauses: list[list[int]], model: list[int]) -> bool:
         if not any(check):
             return False
     return True
-
 
 def brute_force(clauses: list[list[int]], board: Board, *args, **kwargs) -> list[int] | None:
     """
@@ -54,39 +52,3 @@ def brute_force(clauses: list[list[int]], board: Board, *args, **kwargs) -> list
     )
     check, model = generate_states(listUnassigned, board.cols)
     return model if check else None
-
-
-def backtracking_solver(clauses: list[list[int]], board: Board) -> list[int] | None:
-    """
-    Keeps turning True and False for each literal until a valid model is found
-    """
-
-    def backtracking(
-        state: list[int],
-        clauses: list[list[int]],
-    ) -> list[int] | None:
-        model = state + assigned_flatten_cell
-        if check_model(clauses, model):
-            return model
-
-        for i in range(len(state)):
-            state[i] = -state[i]
-
-            if tuple(state) not in visited:
-                visited[tuple(state)] = True
-                result = backtracking(state, clauses)
-                if result is not None:
-                    return result
-
-            state[i] = -state[i]
-        return None
-    
-    assigned_flatten_cell = list(
-        set([clause[0] for clause in clauses if len(clause) == 1])
-    )
-    visited: dict[tuple[int], bool] = dict()
-    initial_state = list(
-        set([i for i in range(1, board.rows * board.cols + 1)])
-        - set(map(lambda x: abs(x), assigned_flatten_cell))
-    )
-    return backtracking(initial_state, clauses)

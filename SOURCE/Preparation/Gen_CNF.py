@@ -1,6 +1,6 @@
 from itertools import combinations  # Create all possible combinations of n elements
 
-from Src.Maps import Board, flatten
+from Preparation.Maps import Board, flatten
 
 
 def gen_CNF(board: Board):

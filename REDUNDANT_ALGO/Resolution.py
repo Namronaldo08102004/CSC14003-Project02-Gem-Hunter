@@ -1,6 +1,5 @@
 from Src.Maps import *
 
-
 def literal_notLiteral_split(
     listKnownLiterals: list[int], clauses: list[list[int]]
 ) -> tuple[list[list[int]], list[list[int]]]:

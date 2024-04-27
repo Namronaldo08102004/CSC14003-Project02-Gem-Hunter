@@ -1,6 +1,5 @@
 import os
 
-
 def flatten(pos: tuple[int, int], n: int) -> int:
     """
     Convert to 1D index count from 1 (cannot use 0 in pysat-CNF)

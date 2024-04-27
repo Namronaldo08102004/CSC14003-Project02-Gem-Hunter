@@ -1,14 +1,13 @@
 import os
 from time import time_ns
 
-from Src.BruteForce_BackTrack import backtracking_solver, brute_force
-from Src.CSP_Backtracking import CSP_Backtracking_Solver
-from Src.DPLL import dpll_solver
-from Src.GA import GeneticAlgorithm
-from Src.Gen_CNF import gen_CNF
-from Src.Maps import Board
-from Src.Pysat import pysat_solver
+from Preparation.Gen_CNF import gen_CNF
+from Preparation.Maps import Board
 
+from Algo.BruteForce import brute_force
+from Algo.DPLL import dpll_solver
+from Algo.GA import GeneticAlgorithm
+from Algo.Pysat import pysat_solver
 
 # Gather user input
 def gather_input(src: list[str], msg: str):
@@ -21,7 +20,7 @@ def gather_input(src: list[str], msg: str):
 
 
 # Find all maps in the chosen folder to choose from
-def choose_map(folder: str = "Maps"):
+def choose_map(folder: str = "Testcase"):
     map_list = os.listdir(folder)
     map_list = [
         x for x in map_list if x.endswith(".txt") and not x.endswith("_solution.txt")
@@ -39,10 +38,8 @@ def re_branch(clauses: list[list[int]], board: Board) -> tuple[list[int], int]:
     algo: dict[str, callable] = {
         "PySAT": pysat_solver,
         "DPLL": dpll_solver,
-        "Backtracking": CSP_Backtracking_Solver,
         "Brute Force": brute_force,
-        # "Backtracking": backtracking_solver,
-        "Genetic Algorithm": GeneticAlgorithm,
+        "Genetic Algorithm": GeneticAlgorithm
     }
     inp = gather_input(key := list(algo.keys()), "Choose an algorithm: ")
     model = None
@@ -54,7 +51,6 @@ def re_branch(clauses: list[list[int]], board: Board) -> tuple[list[int], int]:
 
 def main():
     board = Board(*choose_map())
-    # board = Board("map4.txt", "Maps")
     board.display("Input map")
 
     clauses = gen_CNF(board)

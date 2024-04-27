@@ -1,14 +1,13 @@
 import os
 from time import time_ns
 
-from Src.BruteForce_BackTrack import backtracking_solver, brute_force
-from Src.DPLL import dpll_solver
-from Src.GA import GeneticAlgorithm
-from Src.Gen_CNF import gen_CNF
-from Src.Maps import Board
-from Src.Pysat import pysat_solver
-from Src.CSP_Backtracking import CSP_Backtracking_Solver
+from Preparation.Gen_CNF import gen_CNF
+from Preparation.Maps import Board
 
+from Algo.BruteForce import brute_force
+from Algo.DPLL import dpll_solver
+from Algo.GA import GeneticAlgorithm
+from Algo.Pysat import pysat_solver
 
 def test_performance():
     time_every_case = 1
@@ -20,13 +19,11 @@ def test_performance():
     algo: dict[str, callable] = {
         "PySAT": pysat_solver,
         "DPLL": dpll_solver,
-        "CSP_Backtracking": CSP_Backtracking_Solver,
         "Brute Force": brute_force,
-        "Backtracking": backtracking_solver,
         "GA": GeneticAlgorithm,
     }
     for i in range(len(map_list)):
-        board = Board(map_list[i], "Maps")
+        board = Board(map_list[i], "Testcase")
         clauses = gen_CNF(board)
         print(f"Testing on {map_list[i]}")
 

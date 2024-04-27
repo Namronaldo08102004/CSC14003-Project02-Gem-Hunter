@@ -1,6 +1,5 @@
 from pysat.solvers import Solver
 
-
 def pysat_solver(clauses: list[list[int]], *args, **kwargs) -> list[int]:
     """
     Solve the CNF using pysat
